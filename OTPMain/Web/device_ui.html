@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Encryption System - Device Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .device-status {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .pad-counter {
+            font-size: 72px;
+            font-weight: bold;
+            color: #007bff;
+            margin: 20px 0;
+        }
+        .pad-label {
+            font-size: 18px;
+            color: #6c757d;
+        }
+        .status-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .status-header h2 {
+            margin: 0;
+        }
+        .refresh-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .refresh-button:hover {
+            background-color: #5a6268;
+        }
+        .file-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .file-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .file-name {
+            font-family: monospace;
+        }
+        .file-size {
+            color: #6c757d;
+        }
+        .no-files {
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+        .system-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        .info-card {
+            text-align: center;
+            background-color: white;
+            border-radius: 4px;
+            padding: 15px;
+            width: calc(25% - 15px);
+            min-width: 150px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .info-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .info-label {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .info-card {
+                width: calc(50% - 15px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .info-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OTP Encryption System</h1>
+        <div class="nav">
+            <a href="/device" class="active">Device Monitor</a>
+            <a href="/server">Server</a>
+        </div>
+        
+        <div class="device-status">
+            <div class="pad-label">Available One-Time Pads</div>
+            <div class="pad-counter" id="padCount">-</div>
+        </div>
+        
+        <div class="status-card">
+            <div class="status-header">
+                <h2>Pad Files</h2>
+                <button id="refreshButton" class="refresh-button">Refresh</button>
+            </div>
+            
+            <div class="file-list" id="fileList">
+                <div class="no-files" id="noFiles">Loading pad files...</div>
+            </div>
+        </div>
+        
+        <div class="system-info">
+            <div class="info-card">
+                <div class="info-value" id="totalPads">-</div>
+                <div class="info-label">Total Pads</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="usedPads">-</div>
+                <div class="info-label">Used Pads</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="padSize">-</div>
+                <div class="info-label">Avg Pad Size</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="totalSpace">-</div>
+                <div class="info-label">Total Space</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="device_ui.js"></script>
+</body>
+</html>

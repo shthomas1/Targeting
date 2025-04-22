@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Encryption System - Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .pad-status {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .pad-counter {
+            text-align: center;
+        }
+        .pad-counter .count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .pad-counter .label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .messages-container {
+            margin-top: 20px;
+        }
+        .message-list {
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .message-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .message-item:last-child {
+            border-bottom: none;
+        }
+        .message-field {
+            margin-bottom: 5px;
+        }
+        .message-field span {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .encryption-details, .pad-info, .file-info {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 4px;
+            border-radius: 3px;
+            margin-bottom: 5px;
+        }
+        .message-separator {
+            border: 0;
+            height: 1px;
+            background-color: #ddd;
+            margin: 10px 0;
+        }
+        .refresh-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .refresh-button:hover {
+            background-color: #5a6268;
+        }
+        .no-messages {
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+        .new-message {
+            animation: highlight 2s ease-out;
+        }
+        @keyframes highlight {
+            0% { background-color: #d4edda; }
+            100% { background-color: transparent; }
+        }
+        .pad-management {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .pad-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .pad-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .danger-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .danger-button:hover {
+            background-color: #c82333;
+        }
+        .warning-button {
+            background-color: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .warning-button:hover {
+            background-color: #e0a800;
+        }
+        .primary-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .primary-button:hover {
+            background-color: #0069d9;
+        }
+        .status-message {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .info-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OTP Encryption System</h1>
+        <div class="nav">
+            <a href="/device">Device</a>
+            <a href="/server" class="active">Server</a>
+        </div>
+        
+        <div class="pad-status">
+            <div class="pad-counter">
+                <div class="count" id="devicePadCount">-</div>
+                <div class="label">Device Pads</div>
+            </div>
+            <div class="pad-counter">
+                <div class="count" id="serverPadCount">-</div>
+                <div class="label">Server Pads</div>
+            </div>
+        </div>
+        
+        <div class="messages-container">
+            <h2>
+                Decrypted Messages
+                <button id="refreshButton" class="refresh-button">Refresh</button>
+            </h2>
+            
+            <div class="message-list" id="messageList">
+                <div class="no-messages" id="noMessages">No messages yet</div>
+            </div>
+        </div>
+        
+        <div class="pad-management">
+            <div class="pad-section">
+                <h3>Generate One-Time Pads</h3>
+                <div class="info-text">Rule of thumb: One character requires approximately 4 bytes</div>
+                <div style="margin-top: 10px;">
+                    <input type="number" id="padCountInput" placeholder="Number of Pads" value="4" min="1" />
+                    <input type="number" id="padSizeInput" placeholder="Size (bytes)" value="1024" min="32" />
+                    <button class="primary-button" onclick="generatePads()">Generate Pads</button>
+                </div>
+                <div id="padStatus" class="status-message"></div>
+            </div>
+            
+            <div class="pad-section">
+                <h3>Manage Pads</h3>
+                <div class="button-row">
+                    <button class="danger-button" onclick="clearPads()">🧨 Clear All Pads</button>
+                    <button class="warning-button" onclick="purgeOrphanedPads()">🧹 Purge Orphaned Pads</button>
+                </div>
+                <div class="info-text">Orphaned pads: Used by device but no longer needed by server</div>
+                <div id="clearStatus" class="status-message"></div>
+                <div id="purgeStatus" class="status-message"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="server_ui.js"></script>
+</body>
+</html>
